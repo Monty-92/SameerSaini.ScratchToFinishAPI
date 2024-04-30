@@ -1,0 +1,38 @@
+# Build results
+*/bin/
+*/obj/
+
+# Visual Studio files
+*.user
+*.suo
+*.csproj.user
+*.sln.docstates
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# Temporary files
+*.tmp
+*.log
+
+# Packaging output
+*.nupkg
+
+# Dependency directories
+*/packages/
+*/node_modules/
+
+# IDE-specific directories and files
+*/.vs/
+*/.idea/
+*/.vscode/
+
+# Generated files
+*.designer.cs
+*.g.cs
+*.g.i.cs
+*.i.g.cs
+
+.fake
