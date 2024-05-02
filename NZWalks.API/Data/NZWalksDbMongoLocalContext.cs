@@ -1,11 +1,12 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NZWalks.API.Models.Domain;
 
 namespace NZWalks.API.Data
 {
-    public class NZWalksDbMongoLocalContext
+    public class NZWalksDbMongoLocalContext :DbContext
     {
         private readonly IMongoDatabase _database;
 
@@ -20,6 +21,32 @@ namespace NZWalks.API.Data
         public IMongoCollection<Walk> Walks => _database.GetCollection<Walk>("walks");
         public IMongoCollection<Difficulty> Difficulties => _database.GetCollection<Difficulty>("difficulties");
         public IMongoCollection<RegionModel> Regions => _database.GetCollection<RegionModel>("regions");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            
+            // Seed data for Difficulties
+            // Easy, Medium, Hard
+            var difficulties = new List<Difficulty>()
+            {
+                new Difficulty()
+                {
+                    Id = Guid.Parse("3c741467-fde4-493f-9462-a31efc603eaf"),
+                    Name = "Easy"
+                },
+                new Difficulty()
+                {
+                    Id = Guid.Parse("3563c9e3-459a-4956-b2e0-01e57c1a6440"),
+                    Name = "Medium"
+                },
+                new Difficulty()
+                {
+                    Id = Guid.Parse("6206522c-fe90-44b3-9d07-f9ab13f1bba2"),
+                    Name = "Hard"
+                }
+            };
+        }
     }
 }
 
