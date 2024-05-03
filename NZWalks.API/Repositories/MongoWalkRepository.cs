@@ -27,14 +27,26 @@ namespace NZWalks.API.Repositories
             return walk;
         }
 
-        public async Task<List<Walk>> GetAllWalks()
+        public async Task<List<Walk>> GetAllWalks(string? filterOn = null, string? filterQuery = null)
         {
-            // Create the aggregation pipeline using fluent API
             var pipeline = GeneratePipeline();
-            
-            return await _walksCollection
+
+            // Create the aggregation pipeline using fluent API
+            var joinedWalk = await _walksCollection
                 .Aggregate<Walk>(pipeline)
                 .ToListAsync();
+            
+            var queryableWalk = joinedWalk.AsQueryable();
+
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if(filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    queryableWalk = queryableWalk.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+            
+            return queryableWalk.ToList();
         }
 
         public async Task<Walk?> GetWalkById(Guid id)

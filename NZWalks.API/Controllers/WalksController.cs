@@ -33,7 +33,7 @@ namespace NZWalks.API.Controllers
 
         // Get all walks
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks()
+        public async Task<IActionResult> GetAllWalks([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
             List<Walk> walksDomainModel = await _walkRepository.GetAllWalks();
             
