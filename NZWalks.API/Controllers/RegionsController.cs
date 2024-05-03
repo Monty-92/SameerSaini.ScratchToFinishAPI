@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
@@ -53,6 +54,7 @@ namespace NZWalks.API.Controllers
 
         // POST: Create a NEW REGION
         [HttpPost]
+        [ValidateModelAttribute]
         public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
             if (addRegionRequestDto == null) return BadRequest("Region cannot be null");
@@ -72,6 +74,7 @@ namespace NZWalks.API.Controllers
         // PUT: UPDATE an existing REGION
         [HttpPut]
         [Route("{id:guid}")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             if (updateRegionRequestDto == null) return BadRequest("No region data submitted");
@@ -84,7 +87,7 @@ namespace NZWalks.API.Controllers
 
             // Check if Region Exists
             if (regionDomainModel == null) return NotFound();
-             
+            
             // Convert Domain Model to DTO and Return DTO
             return Ok(_mapper.Map<RegionDto>(regionDomainModel));
         }
@@ -97,10 +100,7 @@ namespace NZWalks.API.Controllers
             // Connect to Database: Remove Record based on Id
             var regionDomainModel = await _regionRepository.DeleteRegion(id);
 
-            if (regionDomainModel == null)
-            {
-                return NotFound();
-            }
+            if (regionDomainModel == null) return NotFound();
 
             // Convert Domain Model to DTO and Return Dto
             return Ok(_mapper.Map<RegionDto>(regionDomainModel));

@@ -45,8 +45,6 @@ public class MongoRegionRepository: IRegionRepository
 
         var updateResult = await _regionsCollection.ReplaceOneAsync(r => r.Id == id, existingRegionDomainModel);
         
-        // if(updateResult.ModifiedCount == 0) return null;
-
         return existingRegionDomainModel;
     }
 

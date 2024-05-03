@@ -20,6 +20,7 @@ ConfigureMongoDB();
 
 // builder.Services.AddScoped<IRegionRepository, InMemoryRegionRepository>();
 builder.Services.AddScoped<IRegionRepository, MongoRegionRepository>();
+builder.Services.AddScoped<IWalkRepository, MongoWalkRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
@@ -37,6 +38,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed the database
+var dbContext = app.Services.GetService<NZWalksDbMongoLocalContext>();
+dbContext.Seed();
 
 app.Run();
 
