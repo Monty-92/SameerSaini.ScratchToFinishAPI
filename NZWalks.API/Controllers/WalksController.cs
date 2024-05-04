@@ -33,9 +33,11 @@ namespace NZWalks.API.Controllers
 
         // Get all walks
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+        public async Task<IActionResult> GetAllWalks(
+            [FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
         {
-            List<Walk> walksDomainModel = await _walkRepository.GetAllWalks();
+            List<Walk> walksDomainModel = await _walkRepository.GetAllWalks(filterOn, filterQuery, sortBy, isAscending ?? true);
             
             if(walksDomainModel.Count == 0 || walksDomainModel == null) return NotFound();
 

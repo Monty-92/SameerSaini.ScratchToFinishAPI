@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using NZWalks.API.Controllers;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 
@@ -27,7 +28,11 @@ namespace NZWalks.API.Repositories
             return walk;
         }
 
-        public async Task<List<Walk>> GetAllWalks(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<Walk>> GetAllWalks(
+            // Filter
+            string? filterOn, string? filterQuery, 
+            // Sort
+            string? sortBy, bool isAscending)
         {
             var pipeline = GeneratePipeline();
 
@@ -38,11 +43,25 @@ namespace NZWalks.API.Repositories
             
             var queryableWalk = joinedWalk.AsQueryable();
 
+            // Filtering
             if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
             {
                 if(filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
                     queryableWalk = queryableWalk.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+
+            // Sorting 
+            if(string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if(sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    queryableWalk = isAscending ? queryableWalk.OrderBy(x => x.Name) : queryableWalk.OrderByDescending(x => x.Name);
+                }
+                else if(sortBy.Equals("LengthInKm", StringComparison.OrdinalIgnoreCase))
+                {
+                    queryableWalk = isAscending ? queryableWalk.OrderBy(x => x.LengthInKm) : queryableWalk.OrderByDescending(x => x.LengthInKm);
                 }
             }
             
