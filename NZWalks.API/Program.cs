@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 using NZWalks.API.Data;
 using NZWalks.API.Mappings;
 using NZWalks.API.Repositories;
